@@ -11,6 +11,7 @@ import { Provider } from 'react-redux'
 import 'babel-polyfill'
 import 'whatwg-fetch' // fetch API
 import 'handjs' // microsoft's pointer events / touch-action spec
+// TODO: intl package (mostly for old-Safari: http://caniuse.com/#search=Intl)
 import './vendor/canvas-toBlob.js'
 import './vendor/Blob.js'
 import './vendor/modernizr-custom'

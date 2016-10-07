@@ -6,7 +6,21 @@
 import i18next from 'i18next'
 import i18nextXhr from 'i18next-xhr-backend'
 import { supplant } from '../util/helpers'
+import { addLocaleData } from 'react-intl'
+
+// Add react-intl files for all the languages we support (added manually for now)
+import es from 'react-intl/locale-data/es'
+import de from 'react-intl/locale-data/de'
+import fi from 'react-intl/locale-data/fi'
+import pl from 'react-intl/locale-data/pl'
+import pt from 'react-intl/locale-data/pt'
+import zh from 'react-intl/locale-data/zh'
+
 import { API_URL } from './config'
+import { debug } from '../preinit/debug_settings'
+
+// Add react-intl locale data
+addLocaleData([...es, ...de, ...fi, ...pl, ...pt, ...zh])
 
 // Default language is set by browser, or is English if undetermined
 const defaultLocale = navigator.language || 'en'
@@ -19,8 +33,6 @@ export function initLocale (experimental) {
   } else {
     locale = 'en'
   }
-
-  doTheI18n(locale)
 }
 
 export function onNewLocaleSelected (event) {
@@ -28,7 +40,12 @@ export function onNewLocaleSelected (event) {
 }
 
 export function getLocale () {
-  return window.localStorage.getItem('locale') || defaultLocale
+  if (debug.experimental) {
+    // Currently experimental-only
+    return window.localStorage.getItem('locale') || defaultLocale
+  } else {
+    return 'en'
+  }
 }
 
 export function setLocale (locale) {
