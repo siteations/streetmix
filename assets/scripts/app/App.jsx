@@ -12,6 +12,7 @@ import DebugInfo from './DebugInfo'
 import Gallery from '../gallery/Gallery'
 import BlockingError from './BlockingError'
 import MiscHTMLStuff from './MiscHTMLStuff'
+import DebugHoverPolygon from '../info_bubble/DebugHoverPolygon'
 import PrintContainer from './PrintContainer'
 
 export default class App extends React.PureComponent {
@@ -34,6 +35,7 @@ export default class App extends React.PureComponent {
 
         <Flash />
         <DebugInfo />
+        <DebugHoverPolygon />
         <PrintContainer />
       </div>
     )
