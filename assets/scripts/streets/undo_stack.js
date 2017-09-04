@@ -14,18 +14,19 @@ import {
 } from './data_model'
 import { getRemixOnFirstEdit } from './remix'
 
+import store from '../store'
+import { replaceUndoStack } from '../store/actions/undo'
+
 const UNDO_LIMIT = 1000
 
 export const FLAG_SAVE_UNDO = false // true to save undo with street data, false to not save undo
 
-let undoStack = []
-
 export function getUndoStack () {
-  return undoStack
+  return cloneDeep(store.getState().undo.stack)
 }
 
 export function setUndoStack (value) {
-  undoStack = value
+  store.dispatch(replaceUndoStack(value))
 }
 
 let undoPosition = 0
@@ -54,8 +55,11 @@ function undoRedo (undo) {
   } else if (!undo && !isRedoAvailable()) {
     showStatusMessage(t('toast.no-redo'))
   } else {
+    const undoStack = getUndoStack()
+
     if (undo) {
       undoStack[undoPosition] = trimStreetData(getStreet())
+      setUndoStack(undoStack)
       undoPosition--
     } else {
       undoPosition++
@@ -82,22 +86,26 @@ export function redo () {
   undoRedo(false)
 }
 
-function trimUndoStack () {
+function trimUndoStack (undoStack) {
   // TODO optimize
   while (undoPosition >= UNDO_LIMIT) {
     undoPosition--
     undoStack = undoStack.slice(1)
   }
+  return undoStack
 }
 
 function createNewUndo () {
   // This removes future undo path in case we undo a few times and then do
   // something undoable.
+  let undoStack = getUndoStack()
   undoStack = undoStack.splice(0, undoPosition)
   undoStack[undoPosition] = cloneDeep(getLastStreet())
   undoPosition++
 
-  trimUndoStack()
+  undoStack = trimUndoStack(undoStack)
+  setUndoStack(undoStack)
+
   unifyUndoStack()
 }
 
@@ -117,7 +125,7 @@ function isUndoAvailable () {
 
 function isRedoAvailable () {
   // Don’t allow undo/redo unless you own the street
-
+  const undoStack = getUndoStack()
   return (undoPosition < undoStack.length - 1) && !getRemixOnFirstEdit()
 }
 
@@ -128,6 +136,7 @@ export function updateUndoButtons () {
 
 export function unifyUndoStack () {
   var street = getStreet()
+  const undoStack = getUndoStack()
   for (var i = 0; i < undoStack.length; i++) {
     undoStack[i].id = street.id
     undoStack[i].name = street.name
@@ -135,4 +144,5 @@ export function unifyUndoStack () {
     undoStack[i].creatorId = street.creatorId
     undoStack[i].updatedAt = street.updatedAt
   }
+  setUndoStack(undoStack)
 }

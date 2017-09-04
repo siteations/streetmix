@@ -78,6 +78,12 @@ export const CHANGE_SEGMENT_WIDTH = 'CHANGE_SEGMENT_WIDTH'
 /* system */
 export const SET_SYSTEM_FLAGS = 'SET_SYSTEM_FLAGS'
 
+/* undo */
+export const CLEAR_UNDO_STACK = 'CLEAR_UNDO_STACK'
+export const REPLACE_UNDO_STACK = 'REPLACE_UNDO_STACK'
+export const UNDO = 'UNDO'
+export const REDO = 'REDO'
+
 /* user */
 export const SET_USER_SIGN_IN_DATA = 'SET_USER_SIGN_IN_DATA'
 export const SET_USER_SIGNED_IN_STATE = 'SET_USER_SIGNED_IN_STATE'
