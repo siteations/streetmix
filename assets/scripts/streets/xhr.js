@@ -50,7 +50,8 @@ import {
   updateToLatestSchemaVersion,
   setStreetCreatorId,
   setUpdateTimeToNow,
-  setLastStreet
+  setLastStreet,
+  setIgnoreStreetChanges
 } from './data_model'
 import { updateStreetName } from './name'
 import {
@@ -63,14 +64,13 @@ import {
   setUndoStack,
   setUndoPosition,
   getUndoStack,
-  FLAG_SAVE_UNDO,
   getUndoPosition,
-  unifyUndoStack,
-  setIgnoreStreetChanges
+  unifyUndoStack
 } from './undo_stack'
 import { resizeStreetWidth } from './width'
 
 const SAVE_STREET_DELAY = 500
+const FLAG_SAVE_UNDO = false // true to save undo with street data, false to not save undo
 
 var saveStreetTimerId = -1
 let saveStreetIncomplete = false
