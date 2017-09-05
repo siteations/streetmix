@@ -81,8 +81,11 @@ export const SET_SYSTEM_FLAGS = 'SET_SYSTEM_FLAGS'
 /* undo */
 export const CLEAR_UNDO_STACK = 'CLEAR_UNDO_STACK'
 export const REPLACE_UNDO_STACK = 'REPLACE_UNDO_STACK'
+export const CREATE_NEW_UNDO = 'CREATE_NEW_UNDO'
 export const UNDO = 'UNDO'
 export const REDO = 'REDO'
+export const SET_UNDO_POSITION = 'SET_UNDO_POSITION'
+export const UNIFY_UNDO_STACK = 'UNIFY_UNDO_STACK'
 
 /* user */
 export const SET_USER_SIGN_IN_DATA = 'SET_USER_SIGN_IN_DATA'
