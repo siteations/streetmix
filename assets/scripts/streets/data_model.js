@@ -29,8 +29,7 @@ import {
   setUndoStack,
   setUndoPosition,
   createNewUndoIfNecessary,
-  unifyUndoStack,
-  updateUndoButtons
+  unifyUndoStack
 } from './undo_stack'
 import {
   DEFAULT_STREET_WIDTH,
@@ -345,8 +344,6 @@ export function saveStreetToServerIfNecessary () {
     scheduleSavingStreetToServer()
 
     _lastStreet = currentData
-
-    updateUndoButtons()
   }
 
   setStreetDataInRedux()
@@ -526,7 +523,6 @@ export function updateEverything (dontScroll, save = true) {
   resizeStreetWidth(dontScroll)
   updateStreetName()
   setIgnoreStreetChanges(false)
-  updateUndoButtons()
   _lastStreet = trimStreetData(street)
 
   if (save === true) {

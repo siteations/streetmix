@@ -1,9 +1,24 @@
 import React from 'react'
+import PropTypes from 'prop-types'
+import { connect } from 'react-redux'
 import Scrollable from '../ui/Scrollable'
 import { createPalette } from '../segments/palette'
-import { undo, redo } from '../streets/undo_stack'
+import { undo, redo, isUndoAvailable, isRedoAvailable } from '../streets/undo_stack'
 
-export default class Palette extends React.PureComponent {
+class Palette extends React.PureComponent {
+  static propTypes = {
+    undoPosition: PropTypes.number
+  }
+
+  constructor (props) {
+    super(props)
+
+    this.state = {
+      undo: false,
+      redo: false
+    }
+  }
+
   componentDidMount () {
     // We have to run this after this event in order to give images time to load.
     window.addEventListener('stmx:everything_loaded', (event) => {
@@ -11,6 +26,16 @@ export default class Palette extends React.PureComponent {
       this.adjustPaletteLayout()
       window.addEventListener('stmx:language_changed', this.adjustPaletteLayout)
     })
+  }
+
+  componentWillReceiveProps (nextProps) {
+    // Update undo or redo buttons if the undo position has changed.
+    if (this.props.undoPosition !== nextProps.undoPosition) {
+      this.setState({
+        undo: isUndoAvailable(),
+        redo: isRedoAvailable()
+      })
+    }
   }
 
   setScrollableRef = (ref) => {
@@ -45,8 +70,8 @@ export default class Palette extends React.PureComponent {
           Drag here to remove
         </div>
         <div className="palette-commands" ref={(ref) => { this.commandsEl = ref }}>
-          <button id="undo" data-i18n="btn.undo" onClick={undo}>Undo</button>
-          <button id="redo" data-i18n="btn.redo" onClick={redo}>Redo</button>
+          <button id="undo" data-i18n="btn.undo" onClick={undo} disabled={!this.state.undo}>Undo</button>
+          <button id="redo" data-i18n="btn.redo" onClick={redo} disabled={!this.state.redo}>Redo</button>
         </div>
         <Scrollable className="palette" setRef={this.setScrollableRef} ref={(ref) => { this.scrollable = ref }}>
           <div className="palette-canvas" />
@@ -55,3 +80,11 @@ export default class Palette extends React.PureComponent {
     )
   }
 }
+
+function mapStateToProps (state) {
+  return {
+    undoPosition: state.undo.position
+  }
+}
+
+export default connect(mapStateToProps)(Palette)
